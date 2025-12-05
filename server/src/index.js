@@ -26,6 +26,10 @@ io.on("connection", (socket) => {
     socket.emit("hello-response", `${data} sended!!`);
   });
 
+  socket.on("draw", (data) => {
+    socket.emit("draw", data);
+  });
+
   socket.on("disconnect", () => {
     console.log(`❌ Client Disconnected ${socket.id}`);
     console.log(io.sockets.sockets.size);
