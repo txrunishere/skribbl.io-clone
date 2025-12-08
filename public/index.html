@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SKRIBBL</title>
+    <script
+      src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+      integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style>
+      body {
+        background-color: #212121;
+        color: white;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="h-screen w-full flex pt-6 justify-center">
+      <div class="w-full space-y-4 container">
+        <!-- NAVBAR -->
+        <nav
+          class="flex justify-between bg-stone-600 shadow-[box-shadow:_rgb(38,_38,_38)_0px_20px_30px_-10px] px-6 py-6 rounded-xl font-bold"
+        >
+          <div>LOGO</div>
+          <div>TIMER</div>
+          <div>
+            <span class="">_</span>
+            <span class="">_</span>
+            <span class="">_</span>
+            <span class="">_</span>
+            <span class="">_</span>
+            <span class="ml-2"></span>
+            <span class="">_</span>
+            <span class="">_</span>
+            <span class="">_</span>
+          </div>
+        </nav>
+        <main class="grid gap-3 grid-cols-12">
+          <!-- PLAYERS LEADERBOARD -->
+          <div class="col-span-2 space-y-2 bg-stone-600 p-4 rounded-xl">
+            <p>Players</p>
+            <div class="space-y-2">
+              <div class="rounded-lg w-full h-16 p-2 border-2">
+                <p class="font-semibold">You</p>
+                <p class="text-sm text-stone-300">350pts</p>
+              </div>
+              <div class="rounded-lg w-full h-16 p-2 border-2">
+                <p class="font-semibold">You</p>
+                <p class="text-sm text-stone-300">350pts</p>
+              </div>
+              <div class="rounded-lg w-full h-16 p-2 border-2">
+                <p class="font-semibold">You</p>
+                <p class="text-sm text-stone-300">350pts</p>
+              </div>
+              <div class="rounded-lg w-full h-16 p-2 border-2">
+                <p class="font-semibold">You</p>
+                <p class="text-sm text-stone-300">350pts</p>
+              </div>
+              <div class="rounded-lg w-full h-16 p-2 border-2">
+                <p class="font-semibold">You</p>
+                <p class="text-sm text-stone-300">350pts</p>
+              </div>
+            </div>
+          </div>
+          <!-- CANVAS -->
+          <div class="col-span-8 p-2 bg-stone-600 rounded-xl">
+            <div>BRUSH SETTINGS</div>
+            <div class="w-full">
+              <canvas
+                class="canvas w-full border rounded-lg h-[600px]"
+              ></canvas>
+            </div>
+            <div>BRUSH COLOR</div>
+          </div>
+          <!-- CHAT BOX -->
+          <div class="col-span-2 bg-stone-600 rounded-xl"></div>
+        </main>
+      </div>
+    </div>
+  </body>
+  <script>
+    const canvas = document.querySelector(".canvas");
+    const ctx = canvas.getContext("2d");
+    let isDrawing = false;
+
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+
+    canvas.addEventListener("mousedown", (e) => {
+      isDrawing = true;
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    });
+
+    canvas.addEventListener("mouseup", () => {
+      isDrawing = false;
+    });
+
+    canvas.addEventListener("mousemove", (e) => {
+      if (!isDrawing) return;
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.stroke();
+      ctx.strokeStyle = "white";
+    });
+
+    canvas.addEventListener("mouseleave", () => {
+      isDrawing = false;
+    });
+  </script>
+</html>
