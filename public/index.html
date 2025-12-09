@@ -10,7 +10,10 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
     <style>
       body {
         background-color: #212121;
@@ -68,14 +71,44 @@
             </div>
           </div>
           <!-- CANVAS -->
-          <div class="col-span-8 p-2 bg-stone-600 rounded-xl">
-            <div>BRUSH SETTINGS</div>
+          <div class="col-span-8 p-2 space-y-4 bg-stone-600 rounded-xl">
+            <!-- BRUSH SETTINGS -->
+            <div class="flex items-center gap-10">
+              <div class="space-x-3">
+                <button class="erase px-2 cursor-pointer py-1 rounded border">
+                  <i class="bi bi-eraser-fill"></i>
+                </button>
+                <button
+                  class="fill-color px-2 cursor-pointer py-1 rounded border"
+                >
+                  <i class="bi bi-paint-bucket"></i>
+                </button>
+              </div>
+              <div class="flex items-center gap-4">
+                <input
+                  id="brush-width-slider"
+                  min="2"
+                  max="50"
+                  value="2"
+                  class="w-[300px]"
+                  type="range"
+                />
+                <p id="brush-width-px" class="font-semibold text-stone-300">
+                  0px
+                </p>
+              </div>
+              <div>
+                <div class="bg-white p-1">
+                  <input id="color-picker" type="color" />
+                </div>
+              </div>
+            </div>
+            <!-- CANVAS -->
             <div class="w-full">
               <canvas
                 class="canvas w-full border rounded-lg h-[600px]"
               ></canvas>
             </div>
-            <div>BRUSH COLOR</div>
           </div>
           <!-- CHAT BOX -->
           <div class="col-span-2 bg-stone-600 rounded-xl"></div>
@@ -87,9 +120,31 @@
     const canvas = document.querySelector(".canvas");
     const ctx = canvas.getContext("2d");
     let isDrawing = false;
+    let strokeColor = "black";
+    let lineWidth = 2;
 
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
+
+    const brushWidthPx = document.getElementById("brush-width-px");
+    const eraserButton = document.querySelector(".erase");
+
+    brushWidthPx.textContent = `${lineWidth}px`;
+
+    document
+      .getElementById("brush-width-slider")
+      .addEventListener("input", (e) => {
+        lineWidth = Number(e.target.value);
+        brushWidthPx.textContent = `${lineWidth}px`;
+      });
+
+    document
+      .getElementById("color-picker")
+      .addEventListener("change", (e) => (strokeColor = e.target.value));
+
+    eraserButton.addEventListener("click", () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
 
     canvas.addEventListener("mousedown", (e) => {
       isDrawing = true;
@@ -103,11 +158,12 @@
 
     canvas.addEventListener("mousemove", (e) => {
       if (!isDrawing) return;
-      ctx.lineTo(e.offsetX, e.offsetY);
-      ctx.lineWidth = 2;
+      ctx.lineWidth = lineWidth;
       ctx.lineCap = "round";
+      let rect = canvas.getBoundingClientRect();
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
       ctx.stroke();
-      ctx.strokeStyle = "white";
+      ctx.strokeStyle = strokeColor;
     });
 
     canvas.addEventListener("mouseleave", () => {
